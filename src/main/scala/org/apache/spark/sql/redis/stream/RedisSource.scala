@@ -17,7 +17,7 @@ import scala.collection.JavaConverters._
 import scala.util.Try
 
 /**
-  * @author The Viet Nguyen
+  * @author The Viet Nguyen // Note: Streaming only.
   */
 class RedisSource(sqlContext: SQLContext, metadataPath: String,
                   userDefinedSchema: Option[StructType], parameters: Map[String, String])

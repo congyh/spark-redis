@@ -14,7 +14,7 @@ class RedisContext(@transient val sc: SparkContext) extends Serializable {
 
   val IncorrectKeysOrKeyPatternMsg = "KeysOrKeyPattern should be String or Array[String]"
 
-  import com.redislabs.provider.redis.RedisContext._
+  import com.redislabs.provider.redis.RedisContext._ // Note: This will expose all methods in related Object definition.
 
   /**
     * @param keyPattern   a key pattern to match, or a single key

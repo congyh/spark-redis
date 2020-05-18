@@ -11,7 +11,7 @@ import org.apache.spark.sql.types.{StringType, StructField, StructType}
   */
 class RedisStreamProvider extends DataSourceRegister with StreamSourceProvider with Logging {
 
-  override def shortName(): String = "redis"
+  override def shortName(): String = "redis" // Note: So this source can be used by: USING org.apache.spark.sql.redis
 
   override def sourceSchema(sqlContext: SQLContext, schema: Option[StructType],
                             providerName: String, parameters: Map[String, String]): (String, StructType) = {

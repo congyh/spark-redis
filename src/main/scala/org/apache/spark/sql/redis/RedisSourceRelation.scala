@@ -27,7 +27,7 @@ class RedisSourceRelation(override val sqlContext: SQLContext,
                           userSpecifiedSchema: Option[StructType])
   extends BaseRelation
     with InsertableRelation
-    with PrunedFilteredScan
+    with PrunedFilteredScan // Note: Table scan Interface of spark.
     with Keys
     with Serializable
     with Logging {
@@ -152,16 +152,16 @@ class RedisSourceRelation(override val sqlContext: SQLContext,
     }
   }
 
-  override def buildScan(requiredColumns: Array[String], filters: Array[Filter]): RDD[Row] = {
+  override def buildScan(requiredColumns: Array[String], filters: Array[Filter]): RDD[Row] = { // Note: Row do have schema, but not have exact type. InternalRow has no schema, it should be accessed by position.
     logInfo("build scan")
-    val keysRdd = sc.fromRedisKeyPattern(dataKeyPattern, partitionNum = numPartitions)
-    if (requiredColumns.isEmpty) {
+    val keysRdd = sc.fromRedisKeyPattern(dataKeyPattern, partitionNum = numPartitions) // Note: Manually create a RDD for keys, will be zipped with values later.
+    if (requiredColumns.isEmpty) { // Note: If no column selected, return empty Rdd.
       keysRdd.map { _ =>
         new GenericRow(Array[Any]())
       }
     } else {
       // filter schema columns, it should be in the same order as given 'requiredColumns'
-      val requiredSchema = {
+      val requiredSchema = { // Note: Build a new schema only contains the required columns.
         val fieldsMap = schema.fields.map(f => (f.name, f)).toMap
         val requiredFields = requiredColumns.map { c =>
           fieldsMap(c)

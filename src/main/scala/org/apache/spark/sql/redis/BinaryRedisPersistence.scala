@@ -34,6 +34,6 @@ class BinaryRedisPersistence extends RedisPersistence[Array[Byte]] {
   override def decodeRow(keyMap: (String, String), value: Array[Byte], schema: StructType,
                          requiredColumns: Seq[String]): Row = {
     val valuesArray: Array[Any] = SerializationUtils.deserialize(value)
-    new GenericRowWithSchema(valuesArray, schema)
+    new GenericRowWithSchema(valuesArray, schema) // Note: Create the actual Row typed data of spark.
   }
 }
