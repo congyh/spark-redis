@@ -153,7 +153,7 @@ class RedisSourceRelation(override val sqlContext: SQLContext,
   }
 
   override def buildScan(requiredColumns: Array[String], filters: Array[Filter]): RDD[Row] = { // Note: Row do have schema, but not have exact type. InternalRow has no schema, it should be accessed by position.
-    logInfo("build scan")
+    logInfo("build scan") // Note: Generate keys by keyPattern + partition idx.
     val keysRdd = sc.fromRedisKeyPattern(dataKeyPattern, partitionNum = numPartitions) // Note: Manually create a RDD for keys, will be zipped with values later.
     if (requiredColumns.isEmpty) { // Note: If no column selected, return empty Rdd.
       keysRdd.map { _ =>
